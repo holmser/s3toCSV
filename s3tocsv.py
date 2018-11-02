@@ -10,72 +10,40 @@ metrics_list = client.list_metrics(
     Namespace='AWS/S3',
     MetricName='BucketSizeBytes',
 )
-
-print(json.dumps(metrics_list, indent=2))
-
+def clean_metric_id(metric_id):
+    clean = metric_id.replace("-","")
+    clean = clean.replace(".","")
+    return clean
+    
 # need to deserialize datetime
 def myconverter(o):
     if isinstance(o, datetime):
         return o.__str__()
 
-
-# Create queries array
-queries = []
-
-# CloudWatch charges per API call, we can stuff multiple requests in a single API call so we will.
+metric_queries = []
 for metric in metrics_list["Metrics"]:
-    queries.append({
-        'Id': 'configbucket',
-        'MetricStat': {
-            'Metric': {
-                'Namespace':
-                'AWS/S3',
-                'MetricName':
-                'BucketSizeBytes',
-                "Dimensions": [{
-                    "Name": "StorageType",
-                    "Value": "StandardStorage"
-                }, {
-                    "Name": "BucketName",
-                    "Value": "config-bucket-487312177614"
-                }]
-            },
-            'Period': 86400,
-            'Stat': 'Average',
-            'Unit': 'Bytes'
-        },
-    })
-
-# metric = metrics_list["Metrics"][0]
-for metric in metrics_list["Metrics"]:
-    response = client.get_metric_data(
-        MetricDataQueries=[
-            {
-                'Id': 'configbucket',
+    metric_id = [x['Value'] for x in metric["Dimensions"] if x["Name"] == "BucketName"][0]
+    
+    print(metric_id)
+    metric_queries.append({
+                'Id': clean_metric_id(metric_id),
                 'MetricStat': {
-                    'Metric': {
-                        'Namespace':
-                        'AWS/S3',
-                        'MetricName':
-                        'BucketSizeBytes',
-                        "Dimensions": [{
-                            "Name": "StorageType",
-                            "Value": "StandardStorage"
-                        },
-                                       {
-                                           "Name": "BucketName",
-                                           "Value":
-                                           "config-bucket-487312177614"
-                                       }]
-                    },
+                    'Metric': metric,
                     'Period': 86400,
                     'Stat': 'Average',
                     'Unit': 'Bytes'
                 },
-            },
-        ],
+            })
+    
+response = client.get_metric_data(
+        MetricDataQueries=metric_queries,
         StartTime=datetime(2018, 10, 1),
         EndTime=datetime(2018, 10, 31))
+
+print(response)
+
+
+
     #ScanBy='TimestampDescending')
 
     # with open('eggs.csv', 'w', newline='') as csvfile:
