@@ -7,3 +7,11 @@ This is a simple script that will grab data from cloudwatch and export it into C
 3.  Dump those metrics into a CSV
 
 Dates are currently hardcoded.  Could be adapted into a lambda to write output to S3.
+
+
+# Usage
+
+```
+python s3tocsv.py
+
+```
