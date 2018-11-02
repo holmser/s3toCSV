@@ -11,7 +11,7 @@ Dates are currently hardcoded.  Could be adapted into a lambda to write output t
 
 # Usage
 
-```
+```sh
 # Works with Python 2 and 3
 pip install -r requirements.txt
 python s3tocsv.py
