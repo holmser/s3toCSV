@@ -1,18 +1,21 @@
-# S3 to CSV
+# Lambda S3 to CSV 
 
-This is a simple script that will grab data from cloudwatch and export it into CSV format.  The flow of the script is as follows:
+This is a simple Lambda that pulls metrics from Cloudwatch and spits them into a csv in s3.  It flows as follows:
 
 1.  Get a list of all metrics in the CloudWatch Namespace "AWS/S3" and MetricName "BucketSizeBytes"
 2.  Request those metrics using a period of 1 day (86400 seconds)
 3.  Dump those metrics into a CSV
+4.  Write to s3
 
-Dates are currently hardcoded.  Could be adapted into a lambda to write output to S3.
 
 
-# Usage
+
+# How to deploy:
+First install node via `brew install node` or by visiting https://nodejs.org/en/download/ .
 
 ```sh
 # Works with Python 2 and 3
-pip install -r requirements.txt
-python s3tocsv.py
+brew install sls
+sls deploy
 ```
+

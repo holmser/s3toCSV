@@ -1,0 +1,36 @@
+# Serverless Config file from https://serverless.com/
+# define our lambda, our triggers, and our IAM roles in this file
+service: S3toCSV 
+provider:
+  name: aws
+  runtime: python3.6
+  # Define Lambda IAM Policy
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+      - "s3:ListBucket"
+      Resource: "arn:aws:s3:::chlmes.dump"
+    - Effect: "Allow"
+      Action:
+      - "s3:PutObject"
+      - "s3:GetObject"
+      - "s3:DeleteObject"
+      - "s3:PutObjectAcl"
+      Resource: "arn:aws:s3:::chlmes.dump/*"
+    - Effect: "Allow"
+      Action:
+      - "cloudwatch:ListMetrics"
+      - "cloudwatch:GetMetricData"
+      Resource: "*"
+
+
+
+functions:
+  s3tocsv:
+    handler: s3tocsv.handler
+    environment: 
+      BUCKET: chlmes.dump
+      FILENAME: usage/s3
+    events:
+      - schedule: rate(10 minutes)
+      # this is the cron that runs our file
