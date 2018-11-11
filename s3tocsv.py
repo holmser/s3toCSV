@@ -8,8 +8,6 @@ from datetime import datetime, timedelta
 
 
 # Metric ID's can only contain alphanumeric characters.  drop all - and .'s
-
-
 def clean_metric_id(metric_id):
     clean = metric_id.replace("-", "")
     clean = clean.replace(".", "")

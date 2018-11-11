@@ -32,5 +32,5 @@ functions:
       BUCKET: chlmes.dump
       FILENAME: usage/s3
     events:
-      - schedule: rate(10 minutes)
+      - schedule: rate(1 day)
       # this is the cron that runs our file
